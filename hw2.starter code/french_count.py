@@ -10,6 +10,7 @@ kFRENCH_TRANS = {0: "zero", 1: "un", 2: "deux", 3: "trois", 4:
                  20: "vingt", 30: "trente", 40: "quarante", 50:
                  "cinquante", 60: "soixante", 100: "cent"}
 
+
 kFRENCH_AND = 'et'
 
 def prepare_input(integer):
@@ -17,7 +18,7 @@ def prepare_input(integer):
       "Integer out of bounds"
     return list("%03i" % integer)
 
-# prepare_input(996)
+prepare_input(996)
 
 def french_count():
     f = FST('french')
@@ -27,26 +28,31 @@ def french_count():
     f.add_state('00X')
     # final state for single digit numbers
     f.add_state('00N')
+    f.add_state('final')
 
 
     f.initial_state = 'start'
 
     f.set_final('00N')
+    f.set_final('final')
 
     # f.add_arc('start', '0XX', [str(ii)], [kFRENCH_TRANS[ii]])
 
-    for ii in xrange(10):
-        if ii == 0:
-            f.add_arc('start', '0XX', [str(ii)], ())
-            f.add_arc('0XX', '00X', [str(ii)], ())
-        f.add_arc('00X', '00N', [str(ii)], [kFRENCH_TRANS[ii]])
+    for key in kFRENCH_TRANS.keys():
+        f.add_arc('start', 'final', prepare_input(key), [kFRENCH_TRANS[key]])
+
+    # for ii in xrange(10):
+    #     if ii == 0:
+    #         f.add_arc('start', '0XX', [str(ii)], ())
+    #         f.add_arc('0XX', '00X', [str(ii)], ())
+    #     f.add_arc('00X', '00N', [str(ii)], [kFRENCH_TRANS[ii]])
 
 
     return f
 
-# french_count().transduce(prepare_input(996))
-# trace(french_count(),prepare_input(996))
-# graphviz_writer(french_count(),'french_count.dot')
+french_count().transduce(prepare_input(996))
+trace(french_count(),prepare_input(996))
+graphviz_writer(french_count(),'french_count.dot')
 
 
 if __name__ == '__main__':
