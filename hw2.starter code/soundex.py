@@ -104,14 +104,11 @@ def letters_to_numbers():
 
     return f1
 
-    # The stub code above converts all letters except the first into '0'.
-    # How can you change it to do the right conversion?
-
-letters_to_numbers().transduce(x for x in "jefferson")
-trace(letters_to_numbers(),"Jurafsky")
-"".join(letters_to_numbers().transduce(x for x in "bush"))
-
-graphviz_writer(letters_to_numbers(),'myfst.dot')
+# letters_to_numbers().transduce(x for x in "jefferson")
+# trace(letters_to_numbers(),"Jurafsky")
+# "".join(letters_to_numbers().transduce(x for x in "bush"))
+#
+# graphviz_writer(letters_to_numbers(),'myfst.dot')
 # dot -Tpng myfst.dot > output.png
 
 def graphviz_writer(fst,fname):
@@ -139,21 +136,35 @@ def truncate_to_three_digits():
     f2 = FST('soundex-truncate')
 
     # Indicate initial and final states
+    f2.add_state('start')
+    f2.add_state('0')
     f2.add_state('1')
-    f2.initial_state = '1'
+    f2.add_state('2')
+    f2.add_state('3')
+
+    f2.initial_state = 'start'
+
+    f2.set_final('0')
     f2.set_final('1')
+    f2.set_final('2')
+    f2.set_final('3')
 
     # Add the arcs
     for letter in string.letters:
-        f2.add_arc('1', '1', (letter), (letter))
+        f2.add_arc('start', '0', (letter), (letter))
 
     for n in range(10):
-        f2.add_arc('1', '1', (str(n)), (str(n)))
+        f2.add_arc('start', '1', (str(n)), (str(n)))
+        f2.add_arc('0', '1', (str(n)), (str(n)))
+        f2.add_arc('1', '2', (str(n)), (str(n)))
+        f2.add_arc('2', '3', (str(n)), (str(n)))
+        f2.add_arc('3', '3', (str(n)), ())
 
     return f2
 
-    # The above stub code doesn't do any truncating at all -- it passes letter and number input through
-    # what changes would make it truncate digits to 3?
+# truncate_to_three_digits().transduce(x for x in "5")
+# trace(truncate_to_three_digits(),"a33333")
+
 
 def add_zero_padding():
     # Now, the third fst - the zero-padding fst
