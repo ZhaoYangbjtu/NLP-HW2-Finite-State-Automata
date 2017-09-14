@@ -43,9 +43,10 @@ def letters_to_numbers():
 
     for letter in string.ascii_letters:
         # Retain the first letter of the name
-        f1.add_arc('start','1',(letter),(letter))
+        # f1.add_arc('start','1',(letter),(letter))
 
-        if letter in to_remove:
+        if letter.lower() in to_remove:
+            f1.add_arc('start','1',(letter),(letter))
             f1.add_arc('1','1',(letter),())
             f1.add_arc('g1','1',(letter),())
             f1.add_arc('g2','1',(letter),())
@@ -53,7 +54,8 @@ def letters_to_numbers():
             f1.add_arc('g4','1',(letter),())
             f1.add_arc('g5','1',(letter),())
             f1.add_arc('g6','1',(letter),())
-        elif letter in group1:
+        elif letter.lower() in group1:
+            f1.add_arc('start','g1',(letter),(letter))
             f1.add_arc('1','g1',(letter),('1'))
             f1.add_arc('g1','g1',(letter),())
             f1.add_arc('g2','g1',(letter),('1'))
@@ -61,7 +63,8 @@ def letters_to_numbers():
             f1.add_arc('g4','g1',(letter),('1'))
             f1.add_arc('g5','g1',(letter),('1'))
             f1.add_arc('g6','g1',(letter),('1'))
-        elif letter in group2:
+        elif letter.lower() in group2:
+            f1.add_arc('start','g2',(letter),(letter))
             f1.add_arc('1','g2',(letter),('2'))
             f1.add_arc('g1','g2',(letter),('2'))
             f1.add_arc('g2','g2',(letter),())
@@ -69,7 +72,8 @@ def letters_to_numbers():
             f1.add_arc('g4','g2',(letter),('2'))
             f1.add_arc('g5','g2',(letter),('2'))
             f1.add_arc('g6','g2',(letter),('2'))
-        elif letter in group3:
+        elif letter.lower() in group3:
+            f1.add_arc('start','g3',(letter),(letter))
             f1.add_arc('1','g3',(letter),('3'))
             f1.add_arc('g1','g3',(letter),('3'))
             f1.add_arc('g2','g3',(letter),('3'))
@@ -77,7 +81,8 @@ def letters_to_numbers():
             f1.add_arc('g4','g3',(letter),('3'))
             f1.add_arc('g5','g3',(letter),('3'))
             f1.add_arc('g6','g3',(letter),('3'))
-        elif letter in group4:
+        elif letter.lower() in group4:
+            f1.add_arc('start','g4',(letter),(letter))
             f1.add_arc('1','g4',(letter),('4'))
             f1.add_arc('g1','g4',(letter),('4'))
             f1.add_arc('g2','g4',(letter),('4'))
@@ -85,7 +90,8 @@ def letters_to_numbers():
             f1.add_arc('g4','g4',(letter),())
             f1.add_arc('g5','g4',(letter),('4'))
             f1.add_arc('g6','g4',(letter),('4'))
-        elif letter in group5:
+        elif letter.lower() in group5:
+            f1.add_arc('start','g5',(letter),(letter))
             f1.add_arc('1','g5',(letter),('5'))
             f1.add_arc('g1','g5',(letter),('5'))
             f1.add_arc('g2','g5',(letter),('5'))
@@ -93,7 +99,8 @@ def letters_to_numbers():
             f1.add_arc('g4','g5',(letter),('5'))
             f1.add_arc('g5','g5',(letter),())
             f1.add_arc('g6','g5',(letter),('5'))
-        elif letter in group6:
+        elif letter.lower() in group6:
+            f1.add_arc('start','g6',(letter),(letter))
             f1.add_arc('1','g6',(letter),('6'))
             f1.add_arc('g1','g6',(letter),('6'))
             f1.add_arc('g2','g6',(letter),('6'))
@@ -104,27 +111,27 @@ def letters_to_numbers():
 
     return f1
 
-# letters_to_numbers().transduce(x for x in "jefferson")
+# letters_to_numbers().transduce(x for x in "Jurafsky")
 # trace(letters_to_numbers(),"Jurafsky")
 # "".join(letters_to_numbers().transduce(x for x in "bush"))
 #
 # graphviz_writer(letters_to_numbers(),'myfst.dot')
 # dot -Tpng myfst.dot > output.png
 
-def graphviz_writer(fst,fname):
-    lines=fst.__str__().split('\n')
-    with open(fname,'w') as f:
-        f.write('digraph G {\n')
-        for n,line in enumerate(lines[1:]):
-            if n < 2:
-                if '# Initial state' in line:
-                    line=re.sub('(\s*)(\w*)(\s*->)(\s*)(\w*)(\s*#\s*Initial state)',r'\1"<init>" \3 "\5"\6',line)
-                elif '# Final state' in line:
-                    line=re.sub('(\s*)(\w*)(\s*->)(\s*)(\w*)(\s*#\s*Final state)',r'\1"\2"\3 "<final>"\4 \6',line)
-            else:
-                line=re.sub('(\s*)(\w*)(\s*->\s*)(\w*)(\s*)\[(.*)\]',r'\1"\2"\3"\4"\5[style=bold,label="\6"];',line)
-            f.write(line+'\n')
-        f.write('  labelloc="t";\n  label="'+lines[0]+'";\n}\n')
+# def graphviz_writer(fst,fname):
+#     lines=fst.__str__().split('\n')
+#     with open(fname,'w') as f:
+#         f.write('digraph G {\n')
+#         for n,line in enumerate(lines[1:]):
+#             if n < 2:
+#                 if '# Initial state' in line:
+#                     line=re.sub('(\s*)(\w*)(\s*->)(\s*)(\w*)(\s*#\s*Initial state)',r'\1"<init>" \3 "\5"\6',line)
+#                 elif '# Final state' in line:
+#                     line=re.sub('(\s*)(\w*)(\s*->)(\s*)(\w*)(\s*#\s*Final state)',r'\1"\2"\3 "<final>"\4 \6',line)
+#             else:
+#                 line=re.sub('(\s*)(\w*)(\s*->\s*)(\w*)(\s*)\[(.*)\]',r'\1"\2"\3"\4"\5[style=bold,label="\6"];',line)
+#             f.write(line+'\n')
+#         f.write('  labelloc="t";\n  label="'+lines[0]+'";\n}\n')
 
 def truncate_to_three_digits():
     """
@@ -170,25 +177,33 @@ def add_zero_padding():
     # Now, the third fst - the zero-padding fst
     f3 = FST('soundex-padzero')
 
+    f3.add_state('start')
+    f3.add_state('0')
     f3.add_state('1')
-    f3.add_state('1a')
-    f3.add_state('1b')
     f3.add_state('2')
+    f3.add_state('2a')
+    f3.add_state('3')
 
-    f3.initial_state = '1'
-    f3.set_final('2')
+    f3.initial_state = 'start'
+
+    f3.set_final('3')
 
     for letter in string.letters:
-        f3.add_arc('1', '1', (letter), (letter))
+        f3.add_arc('start', '0', (letter), (letter))
     for number in xrange(10):
-        f3.add_arc('1', '1', (str(number)), (str(number)))
+        f3.add_arc('start', '1', (str(number)), (str(number)))
+        f3.add_arc('0', '1', (str(number)), (str(number)))
+        f3.add_arc('1', '2', (str(number)), (str(number)))
+        f3.add_arc('1', '2a', (), ('0'))
+        f3.add_arc('2', '3', (str(number)), (str(number)))
+        f3.add_arc('2', '3', (), ('0'))
+        f3.add_arc('2a', '3', (), ('0'))
 
-    f3.add_arc('1', '1a', (), ('0'))
-    f3.add_arc('1a', '1b', (), ('0'))
-    f3.add_arc('1b', '2', (), ('0'))
     return f3
 
-    # The above code adds zeroes but doesn't have any padding logic. Add some!
+# graphviz_writer(add_zero_padding(),'add_zero_padding.dot')
+# add_zero_padding().transduce(x for x in "c111")
+# trace(add_zero_padding(),"3")
 
 if __name__ == '__main__':
     user_input = raw_input().strip()
