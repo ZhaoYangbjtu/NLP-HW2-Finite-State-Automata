@@ -197,6 +197,10 @@ def french_count():
     # 110-119
     f.add_arc('NXX', '01X', [str(1)], ())
 
+    # 120-169
+    for ii in xrange(2,7):
+        f.add_arc('NXX', 'XX', [str(ii)], [kFRENCH_TRANS[ii*10]])
+
 
     return f
 
