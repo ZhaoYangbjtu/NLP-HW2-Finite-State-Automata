@@ -121,6 +121,7 @@ def french_count():
     f.add_state('XX')
     f.add_state('7X')
     f.add_state('8X')
+    f.add_state('9X')
 
     f.initial_state = 'start'
     f.set_final('final')
@@ -170,9 +171,17 @@ def french_count():
         else:
             f.add_arc('8X', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
 
+    # 90s
+    f.add_arc('0XX', '9X', ['9'], [kFRENCH_TRANS[4],kFRENCH_TRANS[20]])
+    for ii in xrange(10):
+        if ii < 7:
+            f.add_arc('9X', 'final', [str(ii)], [kFRENCH_TRANS[ii+10]])
+        else:
+            f.add_arc('9X', 'final', [str(ii)], [kFRENCH_TRANS[10],kFRENCH_TRANS[ii]])
+
     return f
 
-    # 80s
+
 
 
 
