@@ -122,6 +122,8 @@ def french_count():
     f.add_state('7X')
     f.add_state('8X')
     f.add_state('9X')
+    f.add_state('NXX')
+    f.add_state('N0X')
 
     f.initial_state = 'start'
     f.set_final('final')
@@ -152,7 +154,7 @@ def french_count():
         f.add_arc('XX', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
 
     # 70s
-    f.add_arc('0XX', '7X', ['7'], [kFRENCH_TRANS[60]])
+    f.add_arc('0XX', '7X', [str(7)], [kFRENCH_TRANS[60]])
     for ii in xrange(10):
         if ii == 0:
             f.add_arc('7X', 'final', [str(ii)], [kFRENCH_TRANS[10]])
@@ -164,7 +166,7 @@ def french_count():
             f.add_arc('7X', 'final', [str(ii)], [kFRENCH_TRANS[10],kFRENCH_TRANS[ii]])
 
     # 80s
-    f.add_arc('0XX', '8X', ['8'], [kFRENCH_TRANS[4],kFRENCH_TRANS[20]])
+    f.add_arc('0XX', '8X', [str(8)], [kFRENCH_TRANS[4],kFRENCH_TRANS[20]])
     for ii in xrange(10):
         if ii == 0:
             f.add_arc('8X', 'final', [str(ii)], ())
@@ -172,12 +174,26 @@ def french_count():
             f.add_arc('8X', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
 
     # 90s
-    f.add_arc('0XX', '9X', ['9'], [kFRENCH_TRANS[4],kFRENCH_TRANS[20]])
+    f.add_arc('0XX', '9X', [str(9)], [kFRENCH_TRANS[4],kFRENCH_TRANS[20]])
     for ii in xrange(10):
         if ii < 7:
             f.add_arc('9X', 'final', [str(ii)], [kFRENCH_TRANS[ii+10]])
         else:
             f.add_arc('9X', 'final', [str(ii)], [kFRENCH_TRANS[10],kFRENCH_TRANS[ii]])
+
+    # 100-109
+    for ii in xrange(1,10):
+        if ii == 1:
+            f.add_arc('start', 'NXX', [str(ii)], [kFRENCH_TRANS[100]])
+        else:
+            f.add_arc('start', 'NXX', [str(ii)], [kFRENCH_TRANS[ii],kFRENCH_TRANS[100]])
+    f.add_arc('NXX', 'N0X', [str(0)], ())
+    for ii in xrange(10):
+        if ii == 0:
+            f.add_arc('N0X', 'final', [str(0)], ())
+        else:
+            f.add_arc('N0X', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
+
 
     return f
 
@@ -187,7 +203,7 @@ def french_count():
 
 # french_count().transduce(prepare_input(80))
 # trace(french_count(),prepare_input(80))
-# graphviz_writer(french_count(),'french_count.dot')
+graphviz_writer(french_count(),'french_count.dot')
 
 
 if __name__ == '__main__':
