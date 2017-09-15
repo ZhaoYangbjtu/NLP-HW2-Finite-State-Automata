@@ -18,98 +18,6 @@ def prepare_input(integer):
       "Integer out of bounds"
     return list("%03i" % integer)
 
-# prepare_input(996)
-
-# def french_count():
-#     f = FST('french')
-#
-#     f.add_state('start')
-#     f.add_state('XX')
-#     f.add_state('X')
-#     f.add_state('1X')
-#     f.add_state('1X100')
-#     f.add_state('7X')
-#     f.add_state('8X')
-#     f.add_state('9X')
-#     f.add_state('X100')
-#
-#     # final state for single digit numbers
-#     f.add_state('final')
-#
-#
-#     f.initial_state = 'start'
-#
-#     f.set_final('final')
-#
-#     # f.add_arc('start', '0XX', [str(ii)], [kFRENCH_TRANS[ii]])
-#
-#     for key in kFRENCH_TRANS.keys():
-#         f.add_arc('start', 'final', prepare_input(key), [kFRENCH_TRANS[key]])
-#
-#     for ii in xrange(10):
-#         if ii == 0:
-#             f.add_arc('start', 'XX', ['0'], ())
-#             f.add_arc('X100', 'final', [str(ii)], ())
-#         else:
-#             if ii == 1:
-#                 f.add_arc('start', 'XX', [str(ii)], ['cent'])
-#                 f.add_arc('X', 'final', [str(ii)], [kFRENCH_AND,kFRENCH_TRANS[ii]])
-#                 f.add_arc('X100', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
-#             else:
-#                 f.add_arc('start', 'XX', [str(ii)], [kFRENCH_TRANS[ii], 'cent'])
-#                 f.add_arc('X', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
-#                 f.add_arc('X100', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
-#
-#     for ii in xrange(2,7):
-#         f.add_arc('XX', 'X', [str(ii)], [kFRENCH_TRANS[ii*10]])
-#         f.add_arc('XX', 'X100', [str(ii)], [kFRENCH_TRANS[ii*10]])
-#
-#     f.add_arc('XX', '1X', ['1'], ['dix'])
-#     f.add_arc('XX', '1X', ['7'], ['soixante', 'dix'])
-#     f.add_arc('XX', '1X', ['9'], ['quatre','vingt', 'dix'])
-#
-#     f.add_arc('XX', '1X100', ['1'], ['dix'])
-#     f.add_arc('XX', '1X100', ['7'], ['soixante', 'dix'])
-#     f.add_arc('XX', '1X100', ['9'], ['quatre','vingt', 'dix'])
-#
-#     # Handle numbers ending in 17-19
-#     f.add_arc('1X', 'final', ['7'], [kFRENCH_TRANS[7]])
-#     f.add_arc('1X', 'final', ['8'], [kFRENCH_TRANS[8]])
-#     f.add_arc('1X', 'final', ['9'], [kFRENCH_TRANS[9]])
-#     f.add_arc('1X100', 'final', ['7'], [kFRENCH_TRANS[7]])
-#     f.add_arc('1X100', 'final', ['8'], [kFRENCH_TRANS[8]])
-#     f.add_arc('1X100', 'final', ['9'], [kFRENCH_TRANS[9]])
-#     for ii in xrange(0,7):
-#         if ii == 0:
-#             f.add_arc('1X100', 'final', [str(ii)], ())
-#         else:
-#             f.add_arc('1X100', 'final', [str(ii)], [kFRENCH_TRANS[ii+10]])
-#
-#     # Handle 70-76
-#     f.add_arc('XX', '7X', ['7'], ['soixante'])
-#     for ii in xrange(0,7):
-#         if ii == 1:
-#             f.add_arc('7X', 'final', [str(ii)], [kFRENCH_AND,kFRENCH_TRANS[ii+10]])
-#         else:
-#             f.add_arc('7X', 'final', [str(ii)], [kFRENCH_TRANS[ii+10]])
-#
-#     # Handle 80s
-#     f.add_arc('XX', '8X', ['8'], [kFRENCH_TRANS[4], kFRENCH_TRANS[20]])
-#     for ii in xrange(0,10):
-#         f.add_arc('8X', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
-#
-#     # Handle 90-96
-#     f.add_arc('XX', '9X', ['9'], [kFRENCH_TRANS[4], kFRENCH_TRANS[20]])
-#     for ii in xrange(0,7):
-#         f.add_arc('9X', 'final', [str(ii)], [kFRENCH_TRANS[ii+10]])
-#
-#     # handle above 100
-#     f.add_arc('XX', 'X100', ['0'], ())
-#
-#
-#     return f
-#
-
 def french_count():
     f = FST('french')
 
@@ -181,7 +89,7 @@ def french_count():
         else:
             f.add_arc('9X', 'final', [str(ii)], [kFRENCH_TRANS[10],kFRENCH_TRANS[ii]])
 
-    # 100-109
+    # X00-X09
     for ii in xrange(1,10):
         if ii == 1:
             f.add_arc('start', 'NXX', [str(ii)], [kFRENCH_TRANS[100]])
@@ -194,24 +102,23 @@ def french_count():
         else:
             f.add_arc('N0X', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
 
-    # 110-119
+    # X10-X19
     f.add_arc('NXX', '01X', [str(1)], ())
 
-    # 120-169
+    # X20-X69
     for ii in xrange(2,7):
         f.add_arc('NXX', 'XX', [str(ii)], [kFRENCH_TRANS[ii*10]])
 
+    # X70s, X80s, X90s
+    f.add_arc('NXX', '7X', [str(7)], [kFRENCH_TRANS[60]])
+    f.add_arc('NXX', '8X', [str(8)], [kFRENCH_TRANS[4],kFRENCH_TRANS[20]])
+    f.add_arc('NXX', '9X', [str(9)], [kFRENCH_TRANS[4],kFRENCH_TRANS[20]])
 
     return f
 
-
-
-
-
 # french_count().transduce(prepare_input(80))
 # trace(french_count(),prepare_input(80))
-graphviz_writer(french_count(),'french_count.dot')
-
+# graphviz_writer(french_count(),'french_count.dot')
 
 if __name__ == '__main__':
     # string_input = raw_input()
