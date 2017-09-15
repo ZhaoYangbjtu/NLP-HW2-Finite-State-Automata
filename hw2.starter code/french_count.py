@@ -194,6 +194,9 @@ def french_count():
         else:
             f.add_arc('N0X', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
 
+    # 110-119
+    f.add_arc('NXX', '01X', [str(1)], ())
+
 
     return f
 
