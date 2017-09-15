@@ -121,14 +121,12 @@ def french_count():
 # graphviz_writer(french_count(),'french_count.dot')
 
 if __name__ == '__main__':
-    # string_input = raw_input()
-    # user_input = int(string_input)
+    string_input = raw_input()
+    user_input = int(string_input)
     f = french_count()
-    # if string_input:
-    #     print user_input, '-->',
-    #     print " ".join(f.transduce(prepare_input(user_input)))
-    for i in range(0,200):
-        print i, " ".join(f.transduce(prepare_input(i)))
+    if string_input:
+        print user_input, '-->',
+        print " ".join(f.transduce(prepare_input(user_input)))
 
 
 # def graphviz_writer(fst,fname):
