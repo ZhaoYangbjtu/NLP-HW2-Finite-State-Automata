@@ -119,6 +119,7 @@ def french_count():
     f.add_state('00X')
     f.add_state('01X')
     f.add_state('XX')
+    f.add_state('7X')
 
     f.initial_state = 'start'
     f.set_final('final')
@@ -148,14 +149,25 @@ def french_count():
     for ii in xrange(2,10):
         f.add_arc('XX', 'final', [str(ii)], [kFRENCH_TRANS[ii]])
 
+    # 70s
+    f.add_arc('0XX', '7X', ['7'], [kFRENCH_TRANS[60]])
+    for ii in xrange(10):
+        if ii == 0:
+            f.add_arc('7X', 'final', [str(0)], [kFRENCH_TRANS[10]])
+        elif ii == 1:
+            f.add_arc('7X', 'final', [str(1)], [kFRENCH_AND,kFRENCH_TRANS[11]])
+        elif 2 <= ii <= 6:
+            f.add_arc('7X', 'final', [str(ii)], [kFRENCH_TRANS[ii+10]])
+        else:
+            f.add_arc('7X', 'final', [str(ii)], [kFRENCH_TRANS[10],kFRENCH_TRANS[ii]])
 
     return f
 
 
 
 
-# french_count().transduce(prepare_input(31))
-# trace(french_count(),prepare_input(31))
+# french_count().transduce(prepare_input(71))
+# trace(french_count(),prepare_input(70))
 # graphviz_writer(french_count(),'french_count.dot')
 
 
